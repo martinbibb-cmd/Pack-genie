@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Pack-Genie</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pg-hero {
+      text-align: center;
+      max-width: 600px;
+      padding: 2rem;
+    }
+
+    .pg-hero h1 {
+      font-size: 3.5rem;
+      margin: 0 0 1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .pg-hero p {
+      font-size: 1.15rem;
+      margin: 0 0 2rem;
+      opacity: 0.95;
+      line-height: 1.6;
+    }
+
+    .primary-btn {
+      display: inline-block;
+      padding: 0.9rem 2rem;
+      background: #fff;
+      color: #667eea;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .primary-btn:active {
+      transform: translateY(0);
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      margin-top: 3rem;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+      .pg-hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .pg-hero p {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="pg-hero">
+    <h1>Pack-Genie</h1>
+    <p>
+      The central pricing engine for managing labour, materials, and rules.
+      Use Pack-Builder Genie to create and manage packs for your pricebooks.
+    </p>
+    <a href="./pack-builder/" class="primary-btn">Open Pack-Builder Genie</a>
+    <p class="subtitle">
+      Build, test, and manage pricing packs with a full CRUD interface
+    </p>
+  </main>
+</body>
+</html>
