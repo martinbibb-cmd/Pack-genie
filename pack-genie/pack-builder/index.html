@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Pack-Builder Genie</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="top-bar">
+    <h1>Pack-Builder Genie</h1>
+    <div class="top-bar-controls">
+      <label>
+        Pricebook:
+        <select id="pricebookSelect">
+          <option value="BG_2025">BG_2025 (demo)</option>
+        </select>
+      </label>
+      <button id="newPackBtn">+ New Pack</button>
+      <button id="importJsonBtn">Import JSON</button>
+      <button id="downloadJsonBtn">Download packs.json</button>
+      <input type="file" id="importFileInput" accept="application/json" hidden />
+    </div>
+  </header>
+
+  <main>
+    <section class="pack-list-section">
+      <h2>Packs</h2>
+      <table class="pack-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Brand</th>
+            <th>Model / Title</th>
+            <th>Enabled</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="packTableBody">
+          <!-- rows rendered by app.js -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Pack Editor Modal -->
+  <div id="editorModal" class="modal hidden">
+    <div class="modal-content">
+      <header class="modal-header">
+        <h2 id="editorTitle">New Pack</h2>
+        <button type="button" id="closeEditorBtn" class="icon-btn">&times;</button>
+      </header>
+      <form id="packForm">
+        <section class="form-section">
+          <h3>Core Info</h3>
+          <div class="form-grid">
+            <label>
+              Pack ID
+              <input type="text" id="packId" required />
+            </label>
+            <label>
+              Type
+              <select id="packType" required>
+                <option value="">Select type</option>
+                <option value="boiler">Boiler</option>
+                <option value="flue">Flue</option>
+                <option value="cylinder">Cylinder</option>
+                <option value="powerflush">Powerflush</option>
+                <option value="pipework">Pipework</option>
+                <option value="electrical">Electrical</option>
+                <option value="scaffold">Scaffold</option>
+                <option value="disposal">Disposal</option>
+                <option value="trv">TRV</option>
+                <option value="addon">Addon</option>
+                <option value="misc">Misc</option>
+              </select>
+            </label>
+            <label>
+              Brand
+              <input type="text" id="packBrand" />
+            </label>
+            <label>
+              Model
+              <input type="text" id="packModel" />
+            </label>
+            <label>
+              Title
+              <input type="text" id="packTitle" required />
+            </label>
+            <label class="checkbox-inline">
+              <input type="checkbox" id="packEnabled" checked />
+              Enabled
+            </label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h3>Descriptions</h3>
+          <label>
+            Engineer description
+            <textarea id="descEngineer" rows="2"></textarea>
+          </label>
+          <label>
+            Customer description
+            <textarea id="descCustomer" rows="2"></textarea>
+          </label>
+        </section>
+
+        <section class="form-section">
+          <h3>Labour</h3>
+          <div class="form-grid">
+            <label>
+              Hours
+              <input type="number" id="labourHours" min="0" step="0.5" />
+            </label>
+            <label>
+              Rate reference
+              <input type="text" id="labourRateRef" placeholder="engineer_standard" />
+            </label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h3>Materials</h3>
+          <table class="materials-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Unit Cost</th>
+                <th>Unit Price</th>
+                <th>Qty</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="materialsBody">
+              <!-- material rows -->
+            </tbody>
+          </table>
+          <button type="button" id="addMaterialBtn">+ Add material</button>
+        </section>
+
+        <section class="form-section">
+          <h3>Subpacks</h3>
+          <p class="hint">Comma-separated list of other pack IDs this pack includes.</p>
+          <input type="text" id="subpacksInput" placeholder="e.g. condensate_basic, commissioning_standard" />
+        </section>
+
+        <section class="form-section">
+          <h3>Rules</h3>
+          <div class="rules-block">
+            <h4>Include If (all must pass)</h4>
+            <table class="rules-table">
+              <thead>
+                <tr>
+                  <th>Field (dot path)</th>
+                  <th>Operator</th>
+                  <th>Value</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="includeRulesBody">
+                <!-- rows -->
+              </tbody>
+            </table>
+            <button type="button" id="addIncludeRuleBtn">+ Add include rule</button>
+          </div>
+
+          <div class="rules-block">
+            <h4>Exclude If (any that pass block the pack)</h4>
+            <table class="rules-table">
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Operator</th>
+                  <th>Value</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="excludeRulesBody">
+                <!-- rows -->
+              </tbody>
+            </table>
+            <button type="button" id="addExcludeRuleBtn">+ Add exclude rule</button>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h3>Preview JSON</h3>
+          <textarea id="previewJson" rows="6" readonly></textarea>
+        </section>
+
+        <footer class="modal-footer">
+          <button type="button" id="testPackBtn">Test Pack</button>
+          <div class="spacer"></div>
+          <button type="button" id="cancelEditBtn">Cancel</button>
+          <button type="submit" id="savePackBtn">Save Pack</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- Test Pack Modal -->
+  <div id="testModal" class="modal hidden">
+    <div class="modal-content modal-large">
+      <header class="modal-header">
+        <h2>Test Pack Rules</h2>
+        <button type="button" id="closeTestBtn" class="icon-btn">&times;</button>
+      </header>
+      <div class="test-grid">
+        <section>
+          <h3>Sample survey JSON</h3>
+          <textarea id="testInputJson" rows="14"></textarea>
+          <button type="button" id="runTestBtn">Run Test</button>
+        </section>
+        <section>
+          <h3>Result</h3>
+          <pre id="testResult"></pre>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
