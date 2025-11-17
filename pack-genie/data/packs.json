@@ -3,5 +3,391 @@
     "schemaVersion": "1.0.0",
     "currency": "GBP"
   },
-  "packs": []
+  "packs": [
+    {
+      "id": "wor_8000_30kw_combi",
+      "type": "boiler",
+      "brand": "Worcester Bosch",
+      "model": "Greenstar 8000 Life 30kW",
+      "title": "Worcester Bosch Greenstar 8000 Life 30kW Combi Boiler",
+      "description_engineer": "Premium condensing combi boiler with 30kW output. Suitable for properties with 1-2 bathrooms and up to 10 radiators. Includes digital display and weather compensation ready.",
+      "description_customer": "High-efficiency Worcester Bosch combi boiler providing instant hot water and central heating. 12-year warranty included.",
+      "price_book_group": "BG_2025",
+      "labour": {
+        "hours": 5,
+        "rateRef": "engineer_standard"
+      },
+      "materials": [
+        {
+          "code": "WB-8000-30C",
+          "name": "Worcester Greenstar 8000 Life 30kW Combi",
+          "unit_cost": 1245.00,
+          "unit_price": 1850.00,
+          "quantity": 1
+        },
+        {
+          "code": "FITTINGS-COMBI",
+          "name": "Combi boiler connection fittings kit",
+          "unit_cost": 35.00,
+          "unit_price": 65.00,
+          "quantity": 1
+        },
+        {
+          "code": "INHIBITOR-1L",
+          "name": "Fernox Protector F1 system inhibitor 1L",
+          "unit_cost": 12.50,
+          "unit_price": 28.00,
+          "quantity": 1
+        }
+      ],
+      "subpacks": [
+        "commissioning_standard",
+        "condensate_basic"
+      ],
+      "rules": {
+        "include_if": [
+          {
+            "field": "system.system_type",
+            "operator": "equals",
+            "value": "combi"
+          },
+          {
+            "field": "boiler.model",
+            "operator": "equals",
+            "value": "wor_8000_30kw_combi"
+          }
+        ],
+        "exclude_if": [
+          {
+            "field": "site.property_type",
+            "operator": "equals",
+            "value": "flat_high_rise"
+          }
+        ]
+      },
+      "tags": ["premium", "worcester", "combi", "condensing"],
+      "enabled": true
+    },
+    {
+      "id": "flue_horizontal_standard",
+      "type": "flue",
+      "brand": "Worcester Bosch",
+      "model": "7716192094",
+      "title": "Standard Horizontal Flue Kit (up to 1m)",
+      "description_engineer": "Worcester Bosch horizontal flue kit 60/100mm. Includes telescopic sections, terminal, and wall plate. Suitable for through-wall installations up to 1 meter.",
+      "description_customer": "Professional flue system to safely vent boiler gases through external wall.",
+      "price_book_group": "BG_2025",
+      "labour": {
+        "hours": 1.5,
+        "rateRef": "engineer_standard"
+      },
+      "materials": [
+        {
+          "code": "WB-FLUE-H1M",
+          "name": "Worcester horizontal flue kit 60/100 up to 1m",
+          "unit_cost": 85.00,
+          "unit_price": 145.00,
+          "quantity": 1
+        },
+        {
+          "code": "SILICONE-HT",
+          "name": "High-temp silicone sealant",
+          "unit_cost": 6.50,
+          "unit_price": 12.00,
+          "quantity": 1
+        },
+        {
+          "code": "WALL-PLATE",
+          "name": "Decorative wall plate white",
+          "unit_cost": 4.20,
+          "unit_price": 8.50,
+          "quantity": 1
+        }
+      ],
+      "subpacks": [],
+      "rules": {
+        "include_if": [
+          {
+            "field": "flue.type",
+            "operator": "equals",
+            "value": "horizontal"
+          },
+          {
+            "field": "flue.length_m",
+            "operator": "less_than",
+            "value": 1.5
+          }
+        ],
+        "exclude_if": []
+      },
+      "tags": ["flue", "worcester", "horizontal"],
+      "enabled": true
+    },
+    {
+      "id": "condensate_basic",
+      "type": "pipework",
+      "model": "Standard",
+      "title": "Condensate Drain Kit - Basic",
+      "description_engineer": "22mm condensate drain pipe and trap. Includes 3m of pipe, trap, clips, and waste connection. Assumes straightforward run to existing waste.",
+      "description_customer": "Drainage system for boiler condensate water.",
+      "price_book_group": "BG_2025",
+      "labour": {
+        "hours": 1,
+        "rateRef": "engineer_standard"
+      },
+      "materials": [
+        {
+          "code": "CONDENSE-TRAP",
+          "name": "Condensate trap and elbow",
+          "unit_cost": 8.50,
+          "unit_price": 18.00,
+          "quantity": 1
+        },
+        {
+          "code": "PIPE-22MM",
+          "name": "22mm overflow pipe per meter",
+          "unit_cost": 2.80,
+          "unit_price": 5.50,
+          "quantity": 3
+        },
+        {
+          "code": "PIPE-CLIPS",
+          "name": "Pipe clips 22mm",
+          "unit_cost": 0.45,
+          "unit_price": 1.20,
+          "quantity": 6
+        },
+        {
+          "code": "WASTE-CONN",
+          "name": "Universal waste connector",
+          "unit_cost": 3.20,
+          "unit_price": 7.50,
+          "quantity": 1
+        }
+      ],
+      "subpacks": [],
+      "rules": {
+        "include_if": [],
+        "exclude_if": []
+      },
+      "tags": ["condensate", "drainage"],
+      "enabled": true
+    },
+    {
+      "id": "powerflush_standard",
+      "type": "powerflush",
+      "title": "System Powerflush - Standard (up to 10 radiators)",
+      "description_engineer": "Full system powerflush using Magnacleanse machine. Includes system cleaner, inhibitor, and leak sealer. Covers systems up to 10 radiators.",
+      "description_customer": "Deep clean of your heating system to remove sludge and improve efficiency. Recommended with every boiler replacement.",
+      "price_book_group": "BG_2025",
+      "labour": {
+        "hours": 3.5,
+        "rateRef": "engineer_standard"
+      },
+      "materials": [
+        {
+          "code": "FERNOX-CLEANER",
+          "name": "Fernox F3 system cleaner",
+          "unit_cost": 18.50,
+          "unit_price": 35.00,
+          "quantity": 2
+        },
+        {
+          "code": "FERNOX-INHIBITOR",
+          "name": "Fernox F1 Protector inhibitor",
+          "unit_cost": 12.50,
+          "unit_price": 28.00,
+          "quantity": 2
+        },
+        {
+          "code": "LEAK-SEALER",
+          "name": "Fernox F4 leak sealer",
+          "unit_cost": 15.00,
+          "unit_price": 32.00,
+          "quantity": 1
+        }
+      ],
+      "subpacks": [],
+      "rules": {
+        "include_if": [
+          {
+            "field": "site.radiators_count",
+            "operator": "less_than",
+            "value": 11
+          }
+        ],
+        "exclude_if": [
+          {
+            "field": "system.powerflush_not_required",
+            "operator": "equals",
+            "value": true
+          }
+        ]
+      },
+      "tags": ["powerflush", "maintenance"],
+      "enabled": true
+    },
+    {
+      "id": "filter_magnetic_22mm",
+      "type": "addon",
+      "brand": "Adey",
+      "model": "MagnaClean Professional2",
+      "title": "Magnetic System Filter 22mm",
+      "description_engineer": "Adey MagnaClean Professional2 magnetic filter. Captures magnetite and debris to protect boiler and improve system efficiency. 22mm connection.",
+      "description_customer": "Magnetic filter that protects your new boiler from system debris and extends its lifespan.",
+      "price_book_group": "BG_2025",
+      "labour": {
+        "hours": 0.75,
+        "rateRef": "engineer_standard"
+      },
+      "materials": [
+        {
+          "code": "ADEY-MC-PRO2-22",
+          "name": "Adey MagnaClean Professional2 22mm",
+          "unit_cost": 95.00,
+          "unit_price": 165.00,
+          "quantity": 1
+        },
+        {
+          "code": "VALVE-ISO-22",
+          "name": "22mm isolation valve pair",
+          "unit_cost": 8.50,
+          "unit_price": 18.00,
+          "quantity": 1
+        }
+      ],
+      "subpacks": [],
+      "rules": {
+        "include_if": [],
+        "exclude_if": []
+      },
+      "tags": ["filter", "magnetic", "protection"],
+      "enabled": true
+    },
+    {
+      "id": "commissioning_standard",
+      "type": "addon",
+      "title": "Boiler Commissioning & Gas Safety",
+      "description_engineer": "Full boiler commissioning including flue gas analysis, CO/CO2 testing, gas rate check, system pressure test, and customer handover with documentation.",
+      "description_customer": "Professional setup and safety testing of your new boiler installation.",
+      "price_book_group": "BG_2025",
+      "labour": {
+        "hours": 1,
+        "rateRef": "engineer_standard"
+      },
+      "materials": [
+        {
+          "code": "GAS-CERT",
+          "name": "Gas safety certificate and documentation",
+          "unit_cost": 5.00,
+          "unit_price": 15.00,
+          "quantity": 1
+        },
+        {
+          "code": "WARRANTY-REG",
+          "name": "Manufacturer warranty registration",
+          "unit_cost": 0,
+          "unit_price": 0,
+          "quantity": 1
+        }
+      ],
+      "subpacks": [],
+      "rules": {
+        "include_if": [],
+        "exclude_if": []
+      },
+      "tags": ["commissioning", "safety", "compliance"],
+      "enabled": true
+    },
+    {
+      "id": "trv_standard",
+      "type": "trv",
+      "brand": "Drayton",
+      "model": "TRV4",
+      "title": "Thermostatic Radiator Valve (TRV) - Standard",
+      "description_engineer": "Drayton TRV4 thermostatic radiator valve. 15mm angled or straight. Includes valve body, head, and tailpiece.",
+      "description_customer": "Individual room temperature control valve for radiators.",
+      "price_book_group": "BG_2025",
+      "labour": {
+        "hours": 0.25,
+        "rateRef": "engineer_standard"
+      },
+      "materials": [
+        {
+          "code": "DRAYTON-TRV4-15",
+          "name": "Drayton TRV4 15mm angled white",
+          "unit_cost": 12.50,
+          "unit_price": 28.00,
+          "quantity": 1
+        },
+        {
+          "code": "PTFE-TAPE",
+          "name": "PTFE tape",
+          "unit_cost": 0.80,
+          "unit_price": 2.00,
+          "quantity": 1
+        }
+      ],
+      "subpacks": [],
+      "rules": {
+        "include_if": [],
+        "exclude_if": []
+      },
+      "tags": ["trv", "radiator", "control"],
+      "enabled": true
+    },
+    {
+      "id": "gas_pipe_upgrade_22mm",
+      "type": "pipework",
+      "title": "Gas Pipe Upgrade - 22mm (per meter)",
+      "description_engineer": "22mm copper gas pipe installation. Price per meter includes pipe, fittings, brackets, and testing. Required when existing gas supply is inadequate.",
+      "description_customer": "Upgraded gas supply pipe to ensure adequate flow to your new boiler.",
+      "price_book_group": "BG_2025",
+      "labour": {
+        "hours": 0.5,
+        "rateRef": "engineer_standard"
+      },
+      "materials": [
+        {
+          "code": "GAS-PIPE-22MM",
+          "name": "22mm copper gas pipe per meter",
+          "unit_cost": 8.50,
+          "unit_price": 18.00,
+          "quantity": 1
+        },
+        {
+          "code": "GAS-FITTINGS",
+          "name": "Gas pipe fittings allowance",
+          "unit_cost": 3.50,
+          "unit_price": 8.00,
+          "quantity": 1
+        },
+        {
+          "code": "PIPE-CLIPS-22",
+          "name": "22mm pipe clips",
+          "unit_cost": 0.60,
+          "unit_price": 1.50,
+          "quantity": 2
+        }
+      ],
+      "subpacks": [],
+      "rules": {
+        "include_if": [
+          {
+            "field": "site.gas_pipe_upgrade_required",
+            "operator": "equals",
+            "value": true
+          },
+          {
+            "field": "site.supply_gas_pipe_diameter_mm",
+            "operator": "less_than",
+            "value": 22
+          }
+        ],
+        "exclude_if": []
+      },
+      "tags": ["gas", "pipework", "upgrade"],
+      "enabled": true
+    }
+  ]
 }
