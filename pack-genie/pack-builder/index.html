@@ -19,6 +19,7 @@
       <button id="newPackBtn">+ New Pack</button>
       <button id="importJsonBtn">Import JSON</button>
       <button id="downloadJsonBtn">Download packs.json</button>
+      <button id="bugReportBtn" class="bug-report-btn">🐛 Report Bug</button>
       <input type="file" id="importFileInput" accept="application/json" hidden />
     </div>
   </header>
@@ -222,6 +223,43 @@
     </div>
   </div>
 
+  <!-- Bug Report Modal -->
+  <div id="bugReportModal" class="modal hidden">
+    <div class="modal-content modal-bug-report">
+      <header class="modal-header">
+        <h2>Report a Bug</h2>
+        <button type="button" id="closeBugReportBtn" class="icon-btn">&times;</button>
+      </header>
+      <form id="bugReportForm">
+        <section class="form-section">
+          <label>
+            What went wrong? Describe the bug in detail:
+            <textarea id="bugDescription" rows="6" required placeholder="Please describe what happened, what you expected to happen, and any steps to reproduce the issue..."></textarea>
+          </label>
+        </section>
+
+        <section class="form-section">
+          <label>
+            Screenshots (optional - attach any relevant screenshots):
+            <input type="file" id="bugScreenshots" accept="image/*" multiple />
+          </label>
+          <p class="hint">You can select multiple screenshots if needed (max 5MB per file)</p>
+        </section>
+
+        <section class="form-section">
+          <div id="bugReportStatus" class="bug-report-status hidden"></div>
+        </section>
+
+        <footer class="modal-footer">
+          <button type="button" id="cancelBugReportBtn">Cancel</button>
+          <div class="spacer"></div>
+          <button type="submit" id="sendBugReportBtn" class="primary-submit-btn">Send Bug Report</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="app.js" defer></script>
 </body>
 </html>

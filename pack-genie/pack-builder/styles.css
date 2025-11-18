@@ -202,6 +202,64 @@ pre {
   font-weight: 600;
 }
 
+/* Bug Report Styles */
+.bug-report-btn {
+  background: #ef4444;
+  color: #fff;
+  border-color: #dc2626;
+  font-weight: 500;
+}
+
+.bug-report-btn:hover {
+  background: #dc2626;
+}
+
+.modal-bug-report {
+  max-width: 600px;
+}
+
+.primary-submit-btn {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #2563eb;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+}
+
+.primary-submit-btn:hover {
+  background: #2563eb;
+}
+
+.primary-submit-btn:disabled {
+  background: #9ca3af;
+  border-color: #6b7280;
+  cursor: not-allowed;
+}
+
+.bug-report-status {
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.bug-report-status.success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+.bug-report-status.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
+}
+
+.bug-report-status.info {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #3b82f6;
+}
+
 /* Small screens */
 @media (max-width: 768px) {
   .modal-content {
