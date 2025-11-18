@@ -118,6 +118,23 @@ function bindEvents() {
     .addEventListener("click", closeTestModal);
 
   document.getElementById("runTestBtn").addEventListener("click", runTest);
+
+  // Bug Report event listeners
+  document
+    .getElementById("bugReportBtn")
+    .addEventListener("click", openBugReportModal);
+
+  document
+    .getElementById("closeBugReportBtn")
+    .addEventListener("click", closeBugReportModal);
+
+  document
+    .getElementById("cancelBugReportBtn")
+    .addEventListener("click", closeBugReportModal);
+
+  document
+    .getElementById("bugReportForm")
+    .addEventListener("submit", handleBugReportSubmit);
 }
 
 function renderPackList() {
@@ -613,4 +630,215 @@ function evaluatePackRules(pack, ctx) {
     exclude_if: excludeDetails,
     shouldInclude: includePass && !excludeAnyPass,
   };
+}
+
+// ------ Bug Report functionality ------
+
+// Initialize EmailJS with your public key
+// You'll need to set this up at https://www.emailjs.com/
+const EMAILJS_PUBLIC_KEY = "YOUR_EMAILJS_PUBLIC_KEY"; // Replace with actual key
+const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID"; // Replace with actual service ID
+const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID"; // Replace with actual template ID
+
+function openBugReportModal() {
+  const modal = document.getElementById("bugReportModal");
+  document.getElementById("bugReportForm").reset();
+  const statusDiv = document.getElementById("bugReportStatus");
+  statusDiv.className = "bug-report-status hidden";
+  statusDiv.textContent = "";
+  modal.classList.remove("hidden");
+}
+
+function closeBugReportModal() {
+  const modal = document.getElementById("bugReportModal");
+  modal.classList.add("hidden");
+}
+
+function collectDiagnosticData() {
+  const diagnostics = {
+    timestamp: new Date().toISOString(),
+    userAgent: navigator.userAgent,
+    platform: navigator.platform,
+    language: navigator.language,
+    screenResolution: `${window.screen.width}x${window.screen.height}`,
+    windowSize: `${window.innerWidth}x${window.innerHeight}`,
+    url: window.location.href,
+    referrer: document.referrer || "none",
+    cookiesEnabled: navigator.cookieEnabled,
+    onlineStatus: navigator.onLine,
+
+    // Application state
+    packsCount: packFile.packs.length,
+    currentPricebook: document.getElementById("pricebookSelect")?.value || "unknown",
+    localStorageSize: new Blob([localStorage.getItem(STORAGE_KEY) || ""]).size,
+
+    // Browser capabilities
+    localStorage: typeof Storage !== "undefined",
+    sessionStorage: typeof sessionStorage !== "undefined",
+    webWorker: typeof Worker !== "undefined",
+
+    // Performance data
+    memoryUsage: performance.memory ? {
+      usedJSHeapSize: performance.memory.usedJSHeapSize,
+      totalJSHeapSize: performance.memory.totalJSHeapSize,
+      jsHeapSizeLimit: performance.memory.jsHeapSizeLimit
+    } : "not available",
+
+    // Recent console errors (if any were captured)
+    recentErrors: window.bugReportErrors || []
+  };
+
+  return diagnostics;
+}
+
+// Capture console errors for bug reports
+if (!window.bugReportErrors) {
+  window.bugReportErrors = [];
+  const originalError = console.error;
+  console.error = function(...args) {
+    window.bugReportErrors.push({
+      timestamp: new Date().toISOString(),
+      message: args.join(" ")
+    });
+    // Keep only last 10 errors
+    if (window.bugReportErrors.length > 10) {
+      window.bugReportErrors.shift();
+    }
+    originalError.apply(console, args);
+  };
+}
+
+async function handleBugReportSubmit(event) {
+  event.preventDefault();
+
+  const submitBtn = document.getElementById("sendBugReportBtn");
+  const statusDiv = document.getElementById("bugReportStatus");
+  const bugDescription = document.getElementById("bugDescription").value;
+  const screenshotsInput = document.getElementById("bugScreenshots");
+
+  // Disable submit button
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Sending...";
+
+  // Show processing status
+  statusDiv.className = "bug-report-status info";
+  statusDiv.textContent = "Preparing bug report...";
+
+  try {
+    // Collect diagnostic data
+    const diagnostics = collectDiagnosticData();
+
+    // Process screenshots
+    let screenshotData = [];
+    if (screenshotsInput.files.length > 0) {
+      statusDiv.textContent = "Processing screenshots...";
+
+      for (let i = 0; i < Math.min(screenshotsInput.files.length, 5); i++) {
+        const file = screenshotsInput.files[i];
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+          throw new Error(`Screenshot ${file.name} is too large (max 5MB)`);
+        }
+
+        try {
+          const base64 = await fileToBase64(file);
+          screenshotData.push({
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            data: base64
+          });
+        } catch (err) {
+          console.error("Error processing screenshot:", err);
+        }
+      }
+    }
+
+    // Prepare email content
+    const emailData = {
+      to_email: "martinbibb@gmail.com",
+      bug_description: bugDescription,
+      diagnostics: JSON.stringify(diagnostics, null, 2),
+      screenshots_count: screenshotData.length,
+      screenshots: screenshotData.map(s => `${s.name} (${(s.size / 1024).toFixed(2)} KB)`).join(", "),
+      timestamp: new Date().toLocaleString(),
+
+      // Include pack data for debugging
+      packs_data: JSON.stringify(packFile, null, 2)
+    };
+
+    statusDiv.textContent = "Sending bug report...";
+
+    // Initialize EmailJS if not already done
+    if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== "YOUR_EMAILJS_PUBLIC_KEY") {
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+
+      // Send email via EmailJS
+      const response = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        emailData
+      );
+
+      if (response.status === 200) {
+        statusDiv.className = "bug-report-status success";
+        statusDiv.textContent = "Bug report sent successfully! Thank you for your feedback.";
+
+        // Clear form after 2 seconds and close modal
+        setTimeout(() => {
+          closeBugReportModal();
+        }, 2000);
+      } else {
+        throw new Error("Failed to send email");
+      }
+    } else {
+      // Fallback: Show the data to copy manually
+      const reportData = `
+BUG REPORT
+==========
+
+Description:
+${bugDescription}
+
+Diagnostics:
+${JSON.stringify(diagnostics, null, 2)}
+
+Screenshots: ${screenshotData.length} attached
+
+Packs Data:
+${JSON.stringify(packFile, null, 2)}
+      `.trim();
+
+      // Copy to clipboard
+      await navigator.clipboard.writeText(reportData);
+
+      statusDiv.className = "bug-report-status success";
+      statusDiv.textContent = "Bug report copied to clipboard! Please email it to martinbibb@gmail.com";
+
+      // Also log to console
+      console.log("=== BUG REPORT ===");
+      console.log("Description:", bugDescription);
+      console.log("Diagnostics:", diagnostics);
+      console.log("Screenshots:", screenshotData.length);
+      console.log("Packs:", packFile);
+
+      alert("Bug report data has been copied to your clipboard. Please paste it in an email to martinbibb@gmail.com\n\nThe data is also available in the browser console (F12).");
+    }
+
+  } catch (error) {
+    console.error("Bug report error:", error);
+    statusDiv.className = "bug-report-status error";
+    statusDiv.textContent = `Error: ${error.message}. Please email martinbibb@gmail.com directly with your bug report.`;
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Send Bug Report";
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
